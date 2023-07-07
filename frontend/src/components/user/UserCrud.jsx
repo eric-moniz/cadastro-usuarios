@@ -32,10 +32,14 @@ class UserCrud extends Component {
     const method = user.id ? "put" : "post";
     const url = user.id ? `${baseUrl}/${user.id}` : baseUrl;
 
-    axios[method](url, user).then((resp) => {
-      const list = this.getUpdatedList(resp.data);
-      this.setState({ user: initialState.user, list });
-    });
+    if (user.name && user.email) {
+      axios[method](url, user).then((resp) => {
+        const list = this.getUpdatedList(resp.data);
+        this.setState({ user: initialState.user, list });
+      });
+    } else {
+      return;
+    }
   }
 
   getUpdatedList(user, add = true) {
@@ -89,10 +93,15 @@ class UserCrud extends Component {
         <hr />
         <div className="row">
           <div className="col-12 d-flex justify-content-end">
-            <button className="btn btn-primary" onClick={(e) => this.save(e)}>
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={(e) => this.save(e)}
+            >
               Salvar
             </button>
             <button
+              type="button"
               className="btn btn-secondary ml-2"
               onClick={(e) => this.clear(e)}
             >
@@ -139,10 +148,15 @@ class UserCrud extends Component {
           <td>{user.name}</td>
           <td>{user.email}</td>
           <td>
-            <button className="btn btn-warning" onClick={() => this.load(user)}>
+            <button
+              id="action-button"
+              className="btn btn-warning"
+              onClick={() => this.load(user)}
+            >
               <i className="fa fa-pencil"></i>
             </button>
             <button
+              id="action-button"
               className="btn btn-danger ml-2"
               onClick={() => this.remove(user)}
             >
